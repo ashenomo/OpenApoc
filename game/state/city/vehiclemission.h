@@ -102,49 +102,53 @@ class GroundVehicleTileHelper : public CanEnterTileHelper
 	bool isMoveAllowedATV(Scenery &scenery, int dir) const;
 };
 
-class VehicleTargetHelper {
+class VehicleTargetHelper
+{
   public:
-    // Is a given tile reachable by a given vehicle type?
-    enum class Reachability {
-        Reachable,
-        BlockedByVehicle,  // We only check for this if VehicleAvoidance is not Ignore.
-        BlockedByScenery,
-    };
+	// Is a given tile reachable by a given vehicle type?
+	enum class Reachability
+	{
+		Reachable,
+		BlockedByVehicle, // We only check for this if VehicleAvoidance is not Ignore.
+		BlockedByScenery,
+	};
 
-    // Desired target adjustment behavior when the given target tile is BlockedByVehicle.
-    enum class VehicleAvoidance {
-        Ignore,           // Use given target anyway.
-        PickNearbyPoint,  // Go to a nearby point instead and allow mission to finish.
-        Sidestep,         // Go to a nearby point and try to re-route to the original target.
-    };
+	// Desired target adjustment behavior when the given target tile is BlockedByVehicle.
+	enum class VehicleAvoidance
+	{
+		Ignore,          // Use given target anyway.
+		PickNearbyPoint, // Go to a nearby point instead and allow mission to finish.
+		Sidestep,        // Go to a nearby point and try to re-route to the original target.
+	};
 
-    struct AdjustTargetResult {
-        // Original target point's reachability.
-        Reachability reachability;
+	struct AdjustTargetResult
+	{
+		// Original target point's reachability.
+		Reachability reachability;
 
-        // Whether we were able to find a suitable target point. This is false only in extreme cases where there was
-        // no room in the sky, no roads in the city, etc.
-        bool foundSuitableTarget;
-    };
+		// Whether we were able to find a suitable target point. This is false only in extreme cases
+		// where there was no room in the sky, no roads in the city, etc.
+		bool foundSuitableTarget;
+	};
 
-    // Potentially modifies the given target location such that it is reachable for the given vehicle.
-    // Args:
-    //   state: Game state.
-    //   vehicle: Vehicle, only used for looking up the type.
-    //   target: Reference to target location, may be modified by this method.
-    //   vehicleAvoidance: Vehicle avoidance strategy. Only relevant for flyers and UFOs. See enum above.
-    //   adjustForFlying: If false, don't do any checks or adjustment for flyers and UFOs.
-    // Returns: AdjustTargetResult, see above for details.
-    static AdjustTargetResult adjustTargetToClosest(
-            GameState &state, Vehicle &v, Vec3<int> &target,
-            const VehicleAvoidance vehicleAvoidance, bool adjustForFlying);
+	// Potentially modifies the given target location such that it is reachable for the given
+	// vehicle. Args:
+	//   state: Game state.
+	//   vehicle: Vehicle, only used for looking up the type.
+	//   target: Reference to target location, may be modified by this method.
+	//   vehicleAvoidance: Vehicle avoidance strategy. Only relevant for flyers and UFOs. See enum
+	//   above. adjustForFlying: If false, don't do any checks or adjustment for flyers and UFOs.
+	// Returns: AdjustTargetResult, see above for details.
+	static AdjustTargetResult adjustTargetToClosest(GameState &state, Vehicle &v, Vec3<int> &target,
+	                                                const VehicleAvoidance vehicleAvoidance,
+	                                                bool adjustForFlying);
 
   private:
-    static AdjustTargetResult adjustTargetToClosestFlying(
-            GameState &state, Vehicle &v, Vec3<int> &target,
-            const VehicleAvoidance vehicleAvoidance);
-    static AdjustTargetResult adjustTargetToClosestRoad(Vehicle &v, Vec3<int> &target);
-    static AdjustTargetResult adjustTargetToClosestGround(Vehicle &v, Vec3<int> &target);
+	static AdjustTargetResult adjustTargetToClosestFlying(GameState &state, Vehicle &v,
+	                                                      Vec3<int> &target,
+	                                                      const VehicleAvoidance vehicleAvoidance);
+	static AdjustTargetResult adjustTargetToClosestRoad(Vehicle &v, Vec3<int> &target);
+	static AdjustTargetResult adjustTargetToClosestGround(Vehicle &v, Vec3<int> &target);
 };
 
 class VehicleMission
@@ -160,7 +164,6 @@ class VehicleMission
 
 	bool takeOffCheck(GameState &state, Vehicle &v);
 	bool teleportCheck(GameState &state, Vehicle &v);
-
 
   public:
 	VehicleMission() = default;
